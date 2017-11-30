@@ -1,6 +1,6 @@
 package Hint3;
 
-
+afajfjafjajdfkajlfk
 /**
 * Classical Change making problem with an unlimited amount of coins of each type. <br> 
 * Version 1: Selection function with basic policy: First available coin.<br> 
