@@ -1,6 +1,5 @@
 package Hint3;
-
-afajfjafjajdfkajlfk
+	
 /**
 * Classical Change making problem with an unlimited amount of coins of each type. <br> 
 * Version 1: Selection function with basic policy: First available coin.<br> 
@@ -284,7 +283,32 @@ public class ChangeMaking_1 {
 		//SET OF OPS
 		//-----------------------------
 
+		int size = coinValues.length();
+		int changeGenerated = 0;
 		
+		res = new MyDynamicList<Integer>();
+		for(int i = 0; i < size; i++)
+		{
+			res.addElement(0, 0);
+		}
+		
+		while(isFinal(res) == false)
+		{
+			int itemSelected = -1;
+			itemSelected = getCandidate(res);
+			
+			if(isValid(coinValues, amount, changeGenerated, itemSelected) == true)
+			{
+				res.removeElement(itemSelected);
+				res.addElement(itemSelected, 1);
+				
+				changeGenerated += coinValues.getElement(itemSelected);
+			}
+			
+			
+		}
+		
+		displayElements(res);
 		//-----------------------------
 		//Output Variable --> Return FinalValue
 		//-----------------------------		
