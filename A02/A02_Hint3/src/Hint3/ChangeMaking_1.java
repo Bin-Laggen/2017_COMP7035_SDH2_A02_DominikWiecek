@@ -286,37 +286,28 @@ public class ChangeMaking_1 {
 		int size = coinValues.length();
 		int changeGenerated = 0;
 		
-		MyList<Integer> discarded = new MyDynamicList<Integer>();
-		for(int i = 0; i < size; i++)
-		{
-			discarded.addElement(0, 0);
-		}
+		MyList<Integer> discarded = null;
+		discarded = new MyDynamicList<Integer>();
+		
 		
 		res = new MyDynamicList<Integer>();
-		for(int i = 0; i < size; i++)
-		{
-			res.addElement(0, 0);
-		}
 		
-		while(isFinal(res) == false)
+		
+		while(isFinal(changeGenerated, discarded, coinValues, amount) == false)
 		{
 			int itemSelected = -1;
-			itemSelected = getCandidate(res);
+			itemSelected = getCandidate(changeGenerated, discarded, coinValues);
 			
 			if(isValid(coinValues, amount, changeGenerated, itemSelected) == true)
 			{
-				res.removeElement(itemSelected);
-				res.addElement(itemSelected, 1);
+				res.addElement(0, coinValues.getElement(itemSelected));
 				
 				changeGenerated += coinValues.getElement(itemSelected);
 			}
 			else
 			{
-				discarded.removeElement(itemSelected);
-				discarded.addElement(itemSelected, 1);
+				discarded.addElement(0, coinValues.getElement(itemSelected));
 			}
-			
-			
 		}
 		
 		displayElements(res);
