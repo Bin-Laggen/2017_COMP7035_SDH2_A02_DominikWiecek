@@ -282,15 +282,9 @@ public class ChangeMaking_1 {
 		//-----------------------------
 		//SET OF OPS
 		//-----------------------------
-		
+
 		int size = coinValues.length();
 		int changeGenerated = 0;
-		
-		MyList<Integer> discarded = new MyDynamicList<Integer>();
-		for(int i = 0; i < size; i++)
-		{
-			discarded.addElement(0, 0);
-		}
 		
 		res = new MyDynamicList<Integer>();
 		for(int i = 0; i < size; i++)
@@ -309,11 +303,6 @@ public class ChangeMaking_1 {
 				res.addElement(itemSelected, 1);
 				
 				changeGenerated += coinValues.getElement(itemSelected);
-			}
-			else
-			{
-				discarded.removeElement(itemSelected);
-				discarded.addElement(itemSelected, 1);
 			}
 			
 			

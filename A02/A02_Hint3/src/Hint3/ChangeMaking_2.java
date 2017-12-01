@@ -1,13 +1,13 @@
 package Hint3;
-	
+
 /**
 * Classical Change making problem with an unlimited amount of coins of each type. <br> 
-* Version 1: Selection function with basic policy: First available coin.<br> 
-* Leads to non-optimal solution.<br>
+* Version 2: Selection function with more elaborated policy: First biggest-coin.<br> 
+* Depending on the type of coins, it can lead to an optimal solution.<br>
 * The class encapsulates all the functions of the Greedy schema<br>
 */
 
-public class ChangeMaking_1 {
+public class ChangeMaking_2 {
 
 	//---------------------------------------
 	//	Constructor
@@ -15,7 +15,7 @@ public class ChangeMaking_1 {
 	/**
 	 * Constructor of the class. Do not edit it.
 	 */
-	public ChangeMaking_1(){}
+	public ChangeMaking_2(){}
 
 	//-------------------------------------------------------------------
 	// 0. displayElements --> Displays all elements of a MyList 
@@ -71,19 +71,19 @@ public class ChangeMaking_1 {
 	}
 		
 	//-------------------------------------------------------------------
-	// 1. getCandidate --> It selects the next candidate to be considered.  
+	// 1. selectionFunction --> It selects the next candidate to be considered.  
 	//-------------------------------------------------------------------	
 	/**
 	 * Given a current solution that is not a final solution, this function selects the new candidate to be added to it.<br> 
-	 * The policy followed is very simple: Just pick the first non-discarded type of coin.
+	 * The policy followed is more elaborated: Pick the biggest non-discarded type of coin.
 	 * @param changeGenerated: The quantity of change we have generated so far. 
 	 * @param discarded: The MyList stating whether a candidate has been discarded so far or not.
 	 * @param coinValues: A MyList containing the value of each type of coin supported. 
 	 * @return: The index of candidate to be selected.
 	 */	
-	public int getCandidate(int changeGenerated, 
-							MyList<Integer> discarded, 
-							MyList<Integer> coinValues){
+	public int selectionFunction(int changeGenerated, 
+								 MyList<Integer> discarded, 
+								 MyList<Integer> coinValues){
 		
 		//-----------------------------
 		//Output Variable --> InitialValue
@@ -93,33 +93,6 @@ public class ChangeMaking_1 {
 		//-----------------------------
 		//SET OF OPS
 		//-----------------------------
-
-		int size = coinValues.length();
-		int i = 0;
-		boolean inLoop = true, foundCoin = false;
-		while(inLoop && i < size)
-		{
-			int checkCoin = coinValues.getElement(i);
-			int j = 0;
-			while(!foundCoin && j < discarded.length())
-			{
-				if(discarded.getElement(j) == checkCoin)
-				{
-					foundCoin = true;
-					i++;
-				}
-				else
-				{
-					j++;
-				}
-			}
-			if(!foundCoin)
-			{
-				res = i;
-				inLoop = false;
-			}
-			
-		}
 		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -128,7 +101,7 @@ public class ChangeMaking_1 {
 	}
 	
 	//-------------------------------------------------------------------
-	// 2. isValid --> It selects if a candidate can be added to the solution.  
+	// 2. feasibilityTest --> It selects if a candidate can be added to the solution.  
 	//-------------------------------------------------------------------	
 	/**
 	 * Given a current solution and a selected candidate, this function 
@@ -140,10 +113,10 @@ public class ChangeMaking_1 {
 	 * @return: Whether the candidate fits or not into the solution.
 	 */	
 
-	public boolean isValid(MyList<Integer> coinValues,
-						   int amount,
-						   int changeGenerated,
-						   int itemSelected){
+	public boolean feasibilityTest(MyList<Integer> coinValues,
+								   int amount,
+								   int changeGenerated,
+								   int itemSelected){
 		
 		//-----------------------------
 		//Output Variable --> InitialValue
@@ -153,12 +126,8 @@ public class ChangeMaking_1 {
 		//-----------------------------
 		//SET OF OPS
 		//-----------------------------
-
-		if(coinValues.getElement(itemSelected) + changeGenerated <= amount)
-		{
-			res = true;
-		}
 		
+					
 		//-----------------------------
 		//Output Variable --> Return FinalValue
 		//-----------------------------		
@@ -166,7 +135,7 @@ public class ChangeMaking_1 {
 	}
 	
 	//-------------------------------------------------------------------
-	// 3. isFinal --> It selects if the current solution is the final solution  
+	// 3. solutionTest --> It selects if the current solution is the final solution  
 	//-------------------------------------------------------------------	
 	/**
 	 * Given a current solution, this function states whether it is a final solution or it can still be improved.<br> 
@@ -177,10 +146,10 @@ public class ChangeMaking_1 {
 	 * @param amount: The amount of change we want to generate.
 	 * @return: Whether the current solution is the final solution.
 	 */	
-	public boolean isFinal(int changeGenerated,
-						   MyList<Integer> discarded,
-						   MyList<Integer> coinValues, 
-						   int amount){
+	public boolean solutionTest(int changeGenerated,
+								MyList<Integer> discarded,
+								MyList<Integer> coinValues, 
+							    int amount){
 		
 		//-----------------------------
 		//Output Variable --> InitialValue
@@ -190,35 +159,6 @@ public class ChangeMaking_1 {
 		//-----------------------------
 		//SET OF OPS
 		//-----------------------------
-
-		int size = coinValues.length();
-		int i = 0;
-		boolean foundCoinDisc = false;
-		while(res && i < size)
-		{
-			int checkCoin = coinValues.getElement(i);
-			int j = 0;
-			while(!foundCoinDisc && j < discarded.length())
-			{
-				if(discarded.getElement(j) == checkCoin)
-				{
-					foundCoinDisc = true;
-					i++;
-				}
-				else
-				{
-					j++;
-				}
-			}
-			
-			if(!foundCoinDisc)
-			{
-				if(changeGenerated + checkCoin <= amount)
-				{
-					res = false;
-				}
-			}
-		}
 		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -239,9 +179,9 @@ public class ChangeMaking_1 {
 	 * @param amount: The amount of change we want to generate. 
 	 * @return: The value of such solution.
 	 */	
-	public MyList<Integer> getQuality(MyList<Integer> sol, 
-									  int changeGenerated, 
-									  int amount){
+	public MyList<Integer> objectiveFunction(MyList<Integer> sol, 
+											 int changeGenerated, 
+											 int amount){
 		
 		//-----------------------------
 		//Output Variable --> InitialValue
@@ -251,7 +191,6 @@ public class ChangeMaking_1 {
 		//-----------------------------
 		//SET OF OPS
 		//-----------------------------
-
 		
 		
 		//-----------------------------
@@ -270,9 +209,7 @@ public class ChangeMaking_1 {
 	 * @param amount: The amount of change we want to generate.
 	 * @return: A MyList containing the amount of coins of each type being selected.
 	 */	
-	public MyList<Integer> solve(MyList<Integer> coinValues, 
-			                     int amount){
-		
+	public MyList<Integer> solve(MyList<Integer> coinValues, int amount){
 		//-----------------------------
 		//Output Variable --> InitialValue
 		//-----------------------------
@@ -282,44 +219,8 @@ public class ChangeMaking_1 {
 		//-----------------------------
 		//SET OF OPS
 		//-----------------------------
+
 		
-		int size = coinValues.length();
-		int changeGenerated = 0;
-		
-		MyList<Integer> discarded = new MyDynamicList<Integer>();
-		for(int i = 0; i < size; i++)
-		{
-			discarded.addElement(0, 0);
-		}
-		
-		res = new MyDynamicList<Integer>();
-		for(int i = 0; i < size; i++)
-		{
-			res.addElement(0, 0);
-		}
-		
-		while(isFinal(res) == false)
-		{
-			int itemSelected = -1;
-			itemSelected = getCandidate(res);
-			
-			if(isValid(coinValues, amount, changeGenerated, itemSelected) == true)
-			{
-				res.removeElement(itemSelected);
-				res.addElement(itemSelected, 1);
-				
-				changeGenerated += coinValues.getElement(itemSelected);
-			}
-			else
-			{
-				discarded.removeElement(itemSelected);
-				discarded.addElement(itemSelected, 1);
-			}
-			
-			
-		}
-		
-		displayElements(res);
 		//-----------------------------
 		//Output Variable --> Return FinalValue
 		//-----------------------------		
