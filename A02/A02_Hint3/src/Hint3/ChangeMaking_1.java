@@ -96,30 +96,43 @@ public class ChangeMaking_1 {
 
 		int size = coinValues.length();
 		int i = 0;
-		boolean inLoop = true, foundCoin = false;
+		boolean inLoop = true;
 		while(inLoop && i < size)
 		{
-			int checkCoin = coinValues.getElement(i);
-			int j = 0;
-			while(!foundCoin && j < discarded.length())
+			if(discarded.getElement(i) == 1)
 			{
-				if(discarded.getElement(j) == checkCoin)
-				{
-					foundCoin = true;
-					i++;
-				}
-				else
-				{
-					j++;
-				}
+				i++;
 			}
-			if(!foundCoin)
+			else
 			{
 				res = i;
 				inLoop = false;
 			}
-			
 		}
+//		boolean foundCoin = false;
+//		while(inLoop && i < size)
+//		{
+//			int checkCoin = coinValues.getElement(i);
+//			int j = 0;
+//			while(!foundCoin && j < discarded.length())
+//			{
+//				if(discarded.getElement(j) == checkCoin)
+//				{
+//					foundCoin = true;
+//					i++;
+//				}
+//				else
+//				{
+//					j++;
+//				}
+//			}
+//			if(!foundCoin)
+//			{
+//				res = i;
+//				inLoop = false;
+//			}
+//			
+//		}
 		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -193,32 +206,43 @@ public class ChangeMaking_1 {
 
 		int size = coinValues.length();
 		int i = 0;
-		boolean foundCoinDisc = false;
 		while(res && i < size)
 		{
-			int checkCoin = coinValues.getElement(i);
-			int j = 0;
-			while(!foundCoinDisc && j < discarded.length())
+			if(discarded.getElement(i) == 0)
 			{
-				if(discarded.getElement(j) == checkCoin)
-				{
-					foundCoinDisc = true;
-					i++;
-				}
-				else
-				{
-					j++;
-				}
-			}
-			
-			if(!foundCoinDisc)
-			{
-				if(changeGenerated + checkCoin <= amount)
+				if(changeGenerated + coinValues.getElement(i) <= amount)
 				{
 					res = false;
 				}
 			}
+			i++;
 		}
+//		boolean foundCoinDisc = false;
+//		while(res && i < size)
+//		{
+//			int checkCoin = coinValues.getElement(i);
+//			int j = 0;
+//			while(!foundCoinDisc && j < discarded.length())
+//			{
+//				if(discarded.getElement(j) == checkCoin)
+//				{
+//					foundCoinDisc = true;
+//					i++;
+//				}
+//				else
+//				{
+//					j++;
+//				}
+//			}
+//			
+//			if(!foundCoinDisc)
+//			{
+//				if(changeGenerated + checkCoin <= amount)
+//				{
+//					res = false;
+//				}
+//			}
+//		}
 		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -278,6 +302,7 @@ public class ChangeMaking_1 {
 		//-----------------------------
 		MyList<Integer> res = null;
 		MyList<Integer> solutionValue = null;
+		MyList<Integer> discarded = null;
 
 		//-----------------------------
 		//SET OF OPS
@@ -285,13 +310,18 @@ public class ChangeMaking_1 {
 		
 		int size = coinValues.length();
 		int changeGenerated = 0;
-		
-		MyList<Integer> discarded = null;
-		discarded = new MyDynamicList<Integer>();
-		
-		
+
 		res = new MyDynamicList<Integer>();
+		for (int i = 0; i < size; i++)
+		{
+			res.addElement(0, 0);
+		}
 		
+		discarded = new MyDynamicList<Integer>();
+		for (int i = 0; i < size; i++)
+		{
+			discarded.addElement(0, 0);
+		}
 		
 		while(isFinal(changeGenerated, discarded, coinValues, amount) == false)
 		{
@@ -300,14 +330,17 @@ public class ChangeMaking_1 {
 			
 			if(isValid(coinValues, amount, changeGenerated, itemSelected) == true)
 			{
-				res.addElement(0, coinValues.getElement(itemSelected));
+				res.removeElement(itemSelected);
+				res.addElement(itemSelected, 1);
 				
 				changeGenerated += coinValues.getElement(itemSelected);
 			}
 			else
 			{
-				discarded.addElement(0, coinValues.getElement(itemSelected));
+				discarded.removeElement(itemSelected);
+				discarded.addElement(itemSelected, 1);
 			}
+			//System.out.println("Change: " + changeGenerated);
 		}
 		
 		displayElements(res);
