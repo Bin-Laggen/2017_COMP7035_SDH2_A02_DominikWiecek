@@ -109,30 +109,6 @@ public class ChangeMaking_1 {
 				inLoop = false;
 			}
 		}
-//		boolean foundCoin = false;
-//		while(inLoop && i < size)
-//		{
-//			int checkCoin = coinValues.getElement(i);
-//			int j = 0;
-//			while(!foundCoin && j < discarded.length())
-//			{
-//				if(discarded.getElement(j) == checkCoin)
-//				{
-//					foundCoin = true;
-//					i++;
-//				}
-//				else
-//				{
-//					j++;
-//				}
-//			}
-//			if(!foundCoin)
-//			{
-//				res = i;
-//				inLoop = false;
-//			}
-//			
-//		}
 		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -217,32 +193,6 @@ public class ChangeMaking_1 {
 			}
 			i++;
 		}
-//		boolean foundCoinDisc = false;
-//		while(res && i < size)
-//		{
-//			int checkCoin = coinValues.getElement(i);
-//			int j = 0;
-//			while(!foundCoinDisc && j < discarded.length())
-//			{
-//				if(discarded.getElement(j) == checkCoin)
-//				{
-//					foundCoinDisc = true;
-//					i++;
-//				}
-//				else
-//				{
-//					j++;
-//				}
-//			}
-//			
-//			if(!foundCoinDisc)
-//			{
-//				if(changeGenerated + checkCoin <= amount)
-//				{
-//					res = false;
-//				}
-//			}
-//		}
 		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -276,7 +226,15 @@ public class ChangeMaking_1 {
 		//SET OF OPS
 		//-----------------------------
 
+		int coins = 0;
+		for(int i = 0; i < sol.length(); i++)
+		{
+			coins += sol.getElement(i);
+		}
 		
+		res = new MyDynamicList<Integer>();
+		res.addElement(0, coins);
+		res.addElement(1, amount - changeGenerated);
 		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -330,8 +288,9 @@ public class ChangeMaking_1 {
 			
 			if(isValid(coinValues, amount, changeGenerated, itemSelected) == true)
 			{
+				int number = res.getElement(itemSelected) + 1;
 				res.removeElement(itemSelected);
-				res.addElement(itemSelected, 1);
+				res.addElement(itemSelected, number);
 				
 				changeGenerated += coinValues.getElement(itemSelected);
 			}
@@ -340,10 +299,13 @@ public class ChangeMaking_1 {
 				discarded.removeElement(itemSelected);
 				discarded.addElement(itemSelected, 1);
 			}
-			//System.out.println("Change: " + changeGenerated);
 		}
 		
 		displayElements(res);
+		
+		solutionValue = getQuality(res, changeGenerated, amount);
+		System.out.println("Solution = " + solutionValue.getElement(0) + " coins used, "
+				+ solutionValue.getElement(1) + "c away from desired change");
 		//-----------------------------
 		//Output Variable --> Return FinalValue
 		//-----------------------------		

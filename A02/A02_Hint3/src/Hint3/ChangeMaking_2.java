@@ -94,6 +94,20 @@ public class ChangeMaking_2 {
 		//SET OF OPS
 		//-----------------------------
 		
+		int size = coinValues.length();
+		int biggest = 0;
+		for(int i = 0; i < size; i++)
+		{
+			if(discarded.getElement(i) == 0)
+			{
+				if(biggest < coinValues.getElement(i))
+				{
+					biggest = coinValues.getElement(i);
+					res = i;
+				}
+			}	
+		}
+		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
 		//-----------------------------		
@@ -127,6 +141,10 @@ public class ChangeMaking_2 {
 		//SET OF OPS
 		//-----------------------------
 		
+		if(coinValues.getElement(itemSelected) + changeGenerated <= amount)
+		{
+			res = true;
+		}
 					
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -160,6 +178,20 @@ public class ChangeMaking_2 {
 		//SET OF OPS
 		//-----------------------------
 		
+		int size = coinValues.length();
+		int i = 0;
+		while(res && i < size)
+		{
+			if(discarded.getElement(i) == 0)
+			{
+				if(changeGenerated + coinValues.getElement(i) <= amount)
+				{
+					res = false;
+				}
+			}
+			i++;
+		}
+		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
 		//-----------------------------		
@@ -192,6 +224,15 @@ public class ChangeMaking_2 {
 		//SET OF OPS
 		//-----------------------------
 		
+		int coins = 0;
+		for(int i = 0; i < sol.length(); i++)
+		{
+			coins += sol.getElement(i);
+		}
+		
+		res = new MyDynamicList<Integer>();
+		res.addElement(0, coins);
+		res.addElement(1, amount - changeGenerated);
 		
 		//-----------------------------
 		//Output Variable --> Return FinalValue
@@ -215,12 +256,52 @@ public class ChangeMaking_2 {
 		//-----------------------------
 		MyList<Integer> res = null;
 		MyList<Integer> solutionValue = null;
+		MyList<Integer> discarded = null;
 
 		//-----------------------------
 		//SET OF OPS
 		//-----------------------------
-
 		
+		int size = coinValues.length();
+		int changeGenerated = 0;
+
+		res = new MyDynamicList<Integer>();
+		for (int i = 0; i < size; i++)
+		{
+			res.addElement(0, 0);
+		}
+		
+		discarded = new MyDynamicList<Integer>();
+		for (int i = 0; i < size; i++)
+		{
+			discarded.addElement(0, 0);
+		}
+		
+		while(solutionTest(changeGenerated, discarded, coinValues, amount) == false)
+		{
+			int itemSelected = -1;
+			itemSelected = selectionFunction(changeGenerated, discarded, coinValues);
+			
+			if(feasibilityTest(coinValues, amount, changeGenerated, itemSelected) == true)
+			{
+				int number = res.getElement(itemSelected) + 1;
+				res.removeElement(itemSelected);
+				res.addElement(itemSelected, number);
+				
+				changeGenerated += coinValues.getElement(itemSelected);
+			}
+			else
+			{
+				discarded.removeElement(itemSelected);
+				discarded.addElement(itemSelected, 1);
+			}
+		}
+		
+		displayElements(res);
+		
+		solutionValue = objectiveFunction(res, changeGenerated, amount);
+		System.out.println("Solution = " + solutionValue.getElement(0) + " coins used, "
+				+ solutionValue.getElement(1) + "c away from desired change");
 		//-----------------------------
 		//Output Variable --> Return FinalValue
 		//-----------------------------		
